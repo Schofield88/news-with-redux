@@ -1,0 +1,26 @@
+.flex {
+  display: flex;
+}
+
+.borderAndRadius {
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.withPadding {
+  composes: borderAndRadius;
+  padding: 5px 10px;
+}
+
+.someNews {
+  composes: borderAndRadius;
+}
+
+.date {
+  composes: withPadding;
+  margin-right: 20px;
+}
+
+.source {
+  composes: withPadding;
+}
