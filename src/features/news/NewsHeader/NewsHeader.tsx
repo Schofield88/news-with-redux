@@ -23,15 +23,16 @@ const NewsHeader: FC = () => {
         name={"sourceFilter"}
         id={"sourceFilter"}
         value={filter}
-        defaultValue="filterBySource"
         onChange={updateFilter}
       >
-        <option value="filterBySource" disabled hidden>
+        <option value="filterBySource" disabled>
           Filter By Source
         </option>
         <option value={""}>Show All</option>
         {sources.map((source: string) => (
-          <option value={source}>{source}</option>
+          <option key={source} value={source}>
+            {source}
+          </option>
         ))}
       </select>
     </div>

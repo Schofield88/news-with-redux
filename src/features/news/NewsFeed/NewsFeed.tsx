@@ -2,7 +2,11 @@ import { FC } from "react";
 import styles from "./NewsFeed.module.css";
 import { Article } from "../../../api/newsTypes";
 import { useSelector } from "../../../app/hooks";
-import { getArticles, getFilter } from "../newsSelectors";
+import {
+  getArticles,
+  getFilter,
+  getNumberOfArticlesToShow,
+} from "../newsSelectors";
 
 const NewsPiece: FC<{ article: Article }> = ({ article }) => {
   const {
@@ -35,7 +39,8 @@ const NewsFeed: FC = () => {
     ? articles.filter((article: Article) => article.source.name === filter)
     : articles;
 
-  const articlesToShow = filteredArticles.slice();
+  const numberToShow = useSelector(getNumberOfArticlesToShow);
+  const articlesToShow = filteredArticles.slice(0, numberToShow);
 
   return (
     <div>

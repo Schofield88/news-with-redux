@@ -13,6 +13,7 @@ interface NewsState {
   articles: Article[];
   sources: string[];
   filter: string;
+  numberOfArticlesToShow: number;
   status: RequestStatus;
   error?: string | null;
 }
@@ -21,6 +22,7 @@ const initialNewsState: NewsState = {
   articles: [],
   sources: [],
   filter: "",
+  numberOfArticlesToShow: 5,
   status: RequestStatus.IDLE,
   error: null,
 };
@@ -49,6 +51,13 @@ const newsSlice = createSlice({
     changeNewsSource: (state, action) => {
       state.filter = action.payload;
     },
+    showMoreArticles: (state) => {
+      if (state.numberOfArticlesToShow >= state.articles.length) {
+        state.numberOfArticlesToShow = 5;
+      } else {
+        state.numberOfArticlesToShow += 5;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -68,7 +77,13 @@ const newsSlice = createSlice({
 });
 
 const { reducer: newsReducer, actions } = newsSlice;
-const { changeNewsSource } = actions;
+const { changeNewsSource, showMoreArticles } = actions;
 
-export { newsReducer, RequestStatus, fetchNews, changeNewsSource };
+export {
+  newsReducer,
+  RequestStatus,
+  fetchNews,
+  changeNewsSource,
+  showMoreArticles,
+};
 export type { NewsState };
