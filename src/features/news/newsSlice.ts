@@ -9,14 +9,18 @@ enum RequestStatus {
   FAILED = "failed",
 }
 
-interface InitialNewsState {
+interface NewsState {
   articles: Article[];
+  sources: string[];
+  filter: string;
   status: RequestStatus;
   error?: string | null;
 }
 
-const initialNewsState: InitialNewsState = {
+const initialNewsState: NewsState = {
   articles: [],
+  sources: [],
+  filter: "",
   status: RequestStatus.IDLE,
   error: null,
 };
@@ -29,10 +33,23 @@ const fetchNews = createAsyncThunk("news/fetchNews", async () => {
   return theNews.articles;
 });
 
+const getSources = (articles: Article[]): string[] => {
+  const sourceList = new Set<string>();
+  articles.forEach((article) => {
+    sourceList.add(article.source.name);
+  });
+
+  return Array.from(sourceList);
+};
+
 const newsSlice = createSlice({
   name: "news",
   initialState: initialNewsState,
-  reducers: {},
+  reducers: {
+    changeNewsSource: (state, action) => {
+      state.filter = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchNews.pending, (state) => {
@@ -41,6 +58,7 @@ const newsSlice = createSlice({
       .addCase(fetchNews.fulfilled, (state, action) => {
         state.status = RequestStatus.SUCCEEDED;
         state.articles = state.articles.concat(action.payload);
+        state.sources = state.sources.concat(getSources(action.payload));
       })
       .addCase(fetchNews.rejected, (state, action) => {
         state.status = RequestStatus.FAILED;
@@ -49,6 +67,8 @@ const newsSlice = createSlice({
   },
 });
 
-const { reducer: newsReducer } = newsSlice;
+const { reducer: newsReducer, actions } = newsSlice;
+const { changeNewsSource } = actions;
 
-export { newsReducer, RequestStatus, fetchNews };
+export { newsReducer, RequestStatus, fetchNews, changeNewsSource };
+export type { NewsState };

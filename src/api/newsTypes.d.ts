@@ -20,4 +20,4 @@ interface NewsResponse {
   articles: Article[];
 }
 
-export { NewsResponse, Article };
+export { NewsResponse, Article, Source };

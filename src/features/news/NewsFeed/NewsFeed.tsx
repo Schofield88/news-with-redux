@@ -2,6 +2,7 @@ import { FC } from "react";
 import styles from "./NewsFeed.module.css";
 import { Article } from "../../../api/newsTypes";
 import { useSelector } from "../../../app/hooks";
+import { getArticles, getFilter } from "../newsSelectors";
 
 const NewsPiece: FC<{ article: Article }> = ({ article }) => {
   const {
@@ -25,11 +26,20 @@ const NewsPiece: FC<{ article: Article }> = ({ article }) => {
 };
 
 const NewsFeed: FC = () => {
-  const articles = useSelector((state) => state.news.articles);
+  const store = useSelector((state) => state.news);
+  console.log("store: ", store);
+  const filter = useSelector(getFilter);
+  const articles = useSelector(getArticles);
+
+  const filteredArticles = filter
+    ? articles.filter((article: Article) => article.source.name === filter)
+    : articles;
+
+  const articlesToShow = filteredArticles.slice();
 
   return (
     <div>
-      {articles.map((article: Article) => (
+      {articlesToShow.map((article: Article) => (
         <NewsPiece key={article.title} article={article} />
       ))}
     </div>
